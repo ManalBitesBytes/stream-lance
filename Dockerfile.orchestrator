@@ -1,0 +1,28 @@
+# Use a slim Python base image
+FROM python:3.10-slim-bullseye
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Install system dependencies if any are needed (e.g., libpq-dev for psycopg2-binary)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements.txt and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy your application code and necessary modules
+COPY orchestrator.py .
+COPY etl/ ./etl/
+COPY utils/ ./utils/
+COPY app/ ./app/
+COPY notification/ ./notification/
+
+# Copy .env for environment variables (like database and SMTP credentials)
+COPY .env .
+
+# Set the entrypoint command
+CMD ["python", "orchestrator.py"]

@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./db/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  orchestrator:
+    build:
+      context: .
+      dockerfile: Dockerfile.orchestrator
+    restart: on-failure # Keep on-failure as it's a batch job
+    environment:
+      DATABASE_URL: ${DATABASE_URL} # Use the full DATABASE_URL from .env
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./etl:/app/etl
+      - ./utils:/app/utils
+      - ./orchestrator.py:/app/orchestrator.py
+      - ./.env:/app/.env # Still need .env for orchestrator to load env vars
+    # No port mapping needed as it's a background worker
+
+  # NEW SERVICE: Flask Backend Application
+  app:
+    build:
+      context: . # Build from the root directory
+      dockerfile: Dockerfile.app # Use the specific Dockerfile for the app
+    restart: always # Keep the app running
+    environment:
+      DATABASE_URL: ${DATABASE_URL} # Pass the full DATABASE_URL to the Flask app
+      FLASK_SECRET_KEY: ${FLASK_SECRET_KEY} # Pass the Flask secret key
+    ports:
+      - "5000:5000" # Flask app runs on port 5000
+    depends_on:
+      db:
+        condition: service_healthy # Ensure DB is ready before starting Flask app
+    volumes:
+      - ./app:/app/app # Mount app directory for live code changes
+      - ./utils:/app/utils # Mount utils as it's used by app (e.g., db_utils)
+      - ./.env:/app/.env # Mount .env for the app container to read
+
+volumes:
+  db_data:

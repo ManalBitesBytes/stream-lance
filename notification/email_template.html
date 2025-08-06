@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Gigs Alert</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Modern Base Styles */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #2d3748;
+        }
+
+        /* Container with Neumorphic Shadow */
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Gradient Header with Modern Logo */
+        .header {
+            background: linear-gradient(135deg, #6e45e2 0%, #88d3ce 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            margin: 12px 0 0;
+            opacity: 0.9;
+            font-weight: 400;
+            font-size: 16px;
+        }
+
+        /* Content Section */
+        .content {
+            padding: 40px 30px;
+            background: white;
+        }
+
+        /* Intro Text */
+        .intro {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #4a5568;
+        }
+
+        /* Gig Cards - Modern Design */
+        .gig-card {
+            background: white;
+            border-radius: 12px;
+            padding: 0;
+            margin-bottom: 24px;
+            border: 1px solid #edf2f7;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .gig-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(110, 69, 226, 0.12);
+            border-color: rgba(110, 69, 226, 0.2);
+        }
+
+        .gig-header {
+            padding: 20px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .gig-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 0 0 8px;
+            line-height: 1.4;
+        }
+
+        .gig-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .gig-category {
+            color: #4c6fff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .gig-date {
+            color: #718096;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .gig-date svg {
+            margin-left: 2px;
+            margin-right: 2px;
+        }
+
+        .gig-budget {
+            color: #38a169;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .gig-budget svg {
+            margin-left: 4px;
+        }
+
+        .gig-content {
+            padding: 20px;
+        }
+
+        .gig-description {
+            color: #4a5568;
+            font-size: 15px;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .gig-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #6e45e2;
+            color: white !important;
+        }
+
+        .btn-primary:hover {
+            background: #5d38d1;
+            box-shadow: 0 4px 12px rgba(110, 69, 226, 0.25);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #4a5568 !important;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #edf2f7;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+            margin: 30px 0;
+            border: none;
+        }
+
+        /* Footer */
+        .footer {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            text-align: center;
+            font-size: 13px;
+            color: #718096;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .footer a {
+            color: #4a5568;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer a:hover {
+            color: #6e45e2;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+        .mt-20 {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Modern Gradient Header -->
+        <div class="header">
+            <h1>New Opportunities for You</h1>
+            <p>Curated gigs matching your expertise</p>
+        </div>
+
+<!-- Main Content -->
+<div class="content">
+    We've handpicked these opportunities based on your skills and preferences. Apply soon!! top talent gets hired fast!</p>
+
+    <hr class="divider">
+
+    <!-- Gig Cards (Dynamic Content) -->
+    {{gigs_content}}
+
+    <hr class="divider">
+
+    <!-- Rest of the template remains the same -->
+</div>
+
+            <!-- CTA Section -->
+            <div class="text-center">
+                <a href="https://streamlance.com/gigs" class="btn btn-primary">Browse All Gigs</a>
+                <p class="mt-20" style="color: #718096; font-size: 14px;">
+                    Want different opportunities?
+            <p style="margin: 15px 0; text-align: center;">
+                <a href="https://streamlance.com/preferences" style="color: #6e45e2; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-size: 14px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6e45e2" style="vertical-align: middle;">
+                        <path d="M12 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    Update preferences
+                </a>
+            </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-links">
+                <a href="https://streamlance.com">Home</a>
+                <a href="https://streamlance.com/blog">Blog</a>
+                <a href="https://streamlance.com/help">Help</a>
+                <a href="https://streamlance.com/unsubscribe">Unsubscribe</a>
+            </div>
+            <p>© 2025 StreamLance. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
