@@ -132,7 +132,7 @@ def main():
 
     # Schedule the Notification process to run every hour, at :10 past the hour
     # The wrapper ensures the Flask context is handled correctly for the scheduled call
-    schedule.every(ETL_RUN_INTERVAL_HOURS).hours.at(":22").do(scheduled_send_notifications_wrapper)
+    schedule.every(ETL_RUN_INTERVAL_HOURS).hours.at(":10").do(scheduled_send_notifications_wrapper)
 
     # Perform initial ETL run immediately on start
     logger.info("Performing initial ETL run...")
