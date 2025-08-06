@@ -104,7 +104,7 @@ def extract_freelancer_gigs(feed_url):
             "title": title,
             "link": link,
             "description": description,
-            "published_at": published,  # Changed key to match DB schema
+            "published_at": published,
             "budget_amount": budget_amount,
             "budget_currency": budget_currency,
             "skills": skills,

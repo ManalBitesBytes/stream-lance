@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token}}">
+    <title>StreamLance Analytics</title>
+    <link rel="stylesheet" href="../static/styles.css">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <!-- Message Toast -->
+    <div id="message-toast" class="message-toast hidden">
+        <div class="message-content">
+            <div class="message-dot"></div>
+            <span class="message-text"></span>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar hidden">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="logo-container">
+                    <div class="logo-blur"></div>
+                    <div class="logo-main">
+                        <svg class="logo-network" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="2"/><path d="M12 1v6m0 6v6"/><path d="m15.5 3.5-1.9 1.9"/><path d="m5.5 15.5 1.9-1.9"/>
+                        </svg>
+                        <svg class="logo-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        </svg>
+                        <svg class="logo-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polygon points="13,2 3,14 12,14 11,22 21,10 12,10 13,2"/>
+                        </svg>
+                        <div class="logo-dot-1"></div>
+                        <div class="logo-dot-2"></div>
+                    </div>
+                </div>
+                <span class="sidebar-title">StreamLance</span>
+            </div>
+        </div>
+
+        <div class="sidebar-content">
+            <div class="sidebar-user">
+                <p class="sidebar-user-label">Logged in as:</p>
+                <div class="sidebar-user-card">
+                    <div class="sidebar-user-avatar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <span id="sidebar-user-email" class="sidebar-user-email"></span>
+                </div>
+            </div>
+
+            <div class="sidebar-separator"></div>
+
+            <div class="sidebar-nav">
+                <h3 class="sidebar-nav-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="m9 12 2 2 4-4"/><path d="M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z"/><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
+                    </svg>
+                    Navigation
+                </h3>
+
+                <button id="nav-dashboard" class="sidebar-nav-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+                    </svg>
+                    Dashboard
+                </button>
+
+                <button id="nav-preferences" class="sidebar-nav-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    Preferences
+                </button>
+            </div>
+
+            <div class="sidebar-separator"></div>
+
+            <button id="logout-btn" class="sidebar-logout-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                Logout
+            </button>
+        </div>
+
+        <div id="sidebar-preferences" class="sidebar-preferences hidden">
+            <p class="sidebar-preferences-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+                Active Preferences:
+            </p>
+            <div id="sidebar-preferences-list" class="sidebar-preferences-list"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-content">
+
+        <!-- Homepage -->
+        <div id="homepage" class="page">
+            <div class="container">
+                <div class="homepage-header">
+                    <div class="homepage-logo">
+                        <div class="logo-container">
+                            <div class="logo-blur"></div>
+                            <div class="logo-main large">
+                                <svg class="logo-network" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <circle cx="12" cy="12" r="2"/><path d="M12 1v6m0 6v6"/><path d="m15.5 3.5-1.9 1.9"/><path d="m5.5 15.5 1.9-1.9"/>
+                                </svg>
+                                <svg class="logo-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                                </svg>
+                                <svg class="logo-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polygon points="13,2 3,14 12,14 11,22 21,10 12,10 13,2"/>
+                                </svg>
+                                <div class="logo-dot-1"></div>
+                                <div class="logo-dot-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="homepage-title">StreamLance</h1>
+                    <p class="homepage-subtitle">freelance market intelligence & personalized opportunity discovery</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+    <div class="stat-card blue">
+        <div class="stat-content">
+            <div class="stat-text">
+                <p class="stat-label">Active Gigs</p>
+                <p class="stat-value" data-stat="active_gigs">Loading...</p>
+                <p class="stat-change positive">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <polyline points="22,7 13.5,15.5 8.5,10.5 2,17"/>
+                        <polyline points="16,7 22,7 22,13"/>
+                    </svg>
+                    <span class="stat-change-text">Diverse Categories</span>
+                </p>
+            </div>
+            <div class="stat-icon blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M3 3v5h5"/><path d="M21 21v-5h-5"/><path d="m3 8 18 8"/><path d="m21 3-9 9"/><path d="M12 12h9"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card green">
+        <div class="stat-content">
+            <div class="stat-text">
+                <p class="stat-label">Avg. Budget</p>
+                <p class="stat-value" data-stat="avg_budget">Loading...</p>
+                <p class="stat-change positive">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                    <span class="stat-change-text">Get Paid</span>
+                </p>
+            </div>
+            <div class="stat-icon green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card purple">
+        <div class="stat-content">
+            <div class="stat-text">
+                <p class="stat-label">Freelancers</p>
+                <p class="stat-value" data-stat="freelancers">Loading...</p>
+                <p class="stat-change purple">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span class="stat-change-text">Join Us</span>
+                </p>
+            </div>
+            <div class="stat-icon purple">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card amber">
+        <div class="stat-content">
+            <div class="stat-text">
+                <p class="stat-label">Sent Gigs</p>
+                <p class="stat-value" data-stat="sent_gigs">Loading...</p>
+                <p class="stat-change amber">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+                    </svg>
+                    <span class="stat-change-text">Industry leading</span>
+                </p>
+            </div>
+            <div class="stat-icon amber">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+                <div class="analysis-card">
+                    <div class="analysis-card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                </svg>
+                                Trending Categories
+                            </h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="category-list">
+                                <div class="category-item">
+                                    <div class="category-info">
+                                        <span class="category-name">
+                                        <!--category name goes here-->
+                                        </span>
+                                        <div class="category-meta">
+                                            <span class="category-badge positive">
+                                                <!--category change goes here-->
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill blue" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                                <div class="category-item">
+                                    <div class="category-info">
+                                        <span class="category-name">
+                                            <!--category name goes here--></span>
+                                        <div class="category-meta">
+                                            <span class="category-badge positive">
+                                                <!--category change goes here-->
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill purple" style="width: 78%"></div>
+                                    </div>
+                                </div>
+                                <div class="category-item">
+                                    <div class="category-info">
+                                        <span class="category-name">
+                                            <!--category name goes here-->
+                                        </span>
+                                        <div class="category-meta">
+                                            <span class="category-badge positive">
+                                                <!--category change goes here-->
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill pink" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                                <div class="category-item">
+                                    <div class="category-info">
+                                        <span class="category-name">
+                                            <!--category name goes here-->
+                                        </span>
+                                        <div class="category-meta">
+                                            <span class="category-badge positive">
+                                                <!--category change goes here-->
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill cyan" style="width: 52%"></div>
+                                    </div>
+                                </div>
+                                <div class="category-item">
+                                    <div class="category-info">
+                                        <span class="category-name">
+                                            <!--category name goes here-->
+                                        </span>
+                                        <div class="category-meta">
+                                            <span class="category-badge positive">
+                                                <!--category change goes here-->
+                                            </span>
+
+                                        </div>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill orange" style="width: 45%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Benefits Section -->
+                <div class="benefits-section">
+                    <h2 class="benefits-title">Why Choose StreamLance?</h2>
+                    <div class="benefits-grid">
+                        <div class="benefit-card blue">
+                            <div class="benefit-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+                                </svg>
+                            </div>
+                            <h3>AI-Powered Matching</h3>
+                            <p>Our advanced algorithms analyze thousands of gigs daily to find perfect matches for your skills and preferences.</p>
+                        </div>
+                        <div class="benefit-card purple">
+                            <div class="benefit-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polygon points="13,2 3,14 12,14 11,22 21,10 12,10 13,2"/>
+                                </svg>
+                            </div>
+                            <h3>Email Alerts</h3>
+                            <p>Get instant notifications for new opportunities that match your criteria. Never miss out on high-value gigs again.</p>
+                        </div>
+                        <div class="benefit-card indigo">
+                            <div class="benefit-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M3 3v5h5"/><path d="M21 21v-5h-5"/><path d="m3 8 18 8"/><path d="m21 3-9 9"/><path d="M12 12h9"/>
+                                </svg>
+                            </div>
+                            <h3>Market Intelligence</h3>
+                            <p>Access analytics and insights about freelance market trends, pricing, and demand patterns.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Section -->
+                <div class="cta-section">
+                    <h2 class="cta-title">Ready to accelerate your freelance career?</h2>
+                    <div class="cta-buttons">
+                        <button id="get-started-btn" class="btn-primary large">
+                            Get Started Free
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="cta-subtitle">Join thousands of freelancers who trust StreamLance</p>
+                </div>
+
+                <!-- Footer -->
+                <footer class="footer">
+                    <p class="footer-text">© 2025 StreamLance. Empowering freelancers with intelligent market insights.</p>
+                </footer>
+            </div>
+        </div>
+
+        <!-- Auth Page -->
+        <div id="auth-page" class="page hidden">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <button id="back-to-home" class="back-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+                        </svg>
+                        Back to Analytics
+                    </button>
+
+                    <h1 id="auth-title" class="auth-title">Join StreamLance</h1>
+                    <p id="auth-subtitle" class="auth-subtitle">Start discovering your perfect freelance opportunities</p>
+                </div>
+
+                <div class="auth-card">
+                    <div class="auth-card-header">
+                        <h2 id="auth-form-title" class="auth-form-title">
+                            <svg id="auth-form-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="m20 8 2 2-3 3L10 9l2-2z"/>
+                            </svg>
+                            Create Account
+                        </h2>
+                    </div>
+                    <div class="auth-card-content">
+                        <form id="auth-form">
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email</label>
+                                <div class="input-wrapper">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                                    </svg>
+                                    <input type="email" id="email" class="form-input" placeholder="your@email.com" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password" class="form-label">Password</label>
+                                <div class="input-wrapper">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                    <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                                </div>
+                                <p id="password-help" class="form-help">Password must be at least 6 characters</p>
+                            </div>
+
+                            <button type="submit" id="auth-submit" class="btn-primary full-width">
+                                <svg id="auth-submit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="m20 8 2 2-3 3L10 9l2-2z"/>
+                                </svg>
+                                Create Account
+                            </button>
+                        </form>
+
+                        <div class="auth-divider">
+                            <div class="auth-divider-line"></div>
+                            <span class="auth-divider-text">or</span>
+                            <div class="auth-divider-line"></div>
+                        </div>
+
+                        <button id="toggle-auth" class="btn-ghost">
+                            Already have an account? Sign in instead
+                        </button>
+
+                        <div id="auth-benefits" class="auth-benefits">
+                            <p class="auth-benefits-title">🚀 What you'll get:</p>
+                            <ul class="auth-benefits-list">
+                                <li>• Personalized gig recommendations</li>
+                                <li>• Hourly email alerts</li>
+                                <li>• Market analytics & insights</li>
+                                <li>• Free forever</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="auth-help">
+                    <p>This is a demo - use any email and password (min 6 characters)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preferences Page -->
+        <div id="preferences-page" class="page hidden">
+            <div class="preferences-container">
+                <div class="preferences-header">
+                    <div class="preferences-logo">
+                        <div class="logo-container">
+                            <div class="logo-blur"></div>
+                            <div class="logo-main medium">
+                                <svg class="logo-network" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <circle cx="12" cy="12" r="2"/><path d="M12 1v6m0 6v6"/><path d="m15.5 3.5-1.9 1.9"/><path d="m5.5 15.5 1.9-1.9"/>
+                                </svg>
+                                <svg class="logo-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                                </svg>
+                                <svg class="logo-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polygon points="13,2 3,14 12,14 11,22 21,10 12,10 13,2"/>
+                                </svg>
+                                <div class="logo-dot-1"></div>
+                                <div class="logo-dot-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="preferences-title">Customize Your Experience</h1>
+                    <p class="preferences-subtitle">Select up to 3 categories that match your skills and interests</p>
+                </div>
+
+                <div class="preferences-current">
+                    <div class="preferences-current-content">
+                        <p class="preferences-current-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="m9 12 2 2 4-4"/><path d="M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z"/><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
+                            </svg>
+                            Your current preferences:
+                        </p>
+                        <div id="current-preferences" class="current-preferences">
+                            <span class="no-preferences">None selected</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="preferences-card">
+                    <div class="preferences-card-header">
+                        <h2 class="preferences-card-title">Choose Your Focus Areas</h2>
+                        <div id="selection-counter" class="selection-counter">
+                            <svg class="counter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                            </svg>
+                            <span class="counter-text">0/3 categories selected</span>
+                        </div>
+                    </div>
+                    <div class="preferences-card-content">
+                        <div id="categories-grid" class="categories-grid">
+                            <!-- Categories will be populated by JavaScript -->
+                        </div>
+
+                        <div class="preferences-actions">
+                            <button id="save-preferences" class="btn-primary" disabled>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/>
+                                </svg>
+                                Save Preferences & Continue
+                            </button>
+
+                            <button id="skip-to-dashboard" class="btn-ghost hidden">
+                                Skip to Dashboard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard-page" class="page hidden">
+            <div class="dashboard-container">
+                <div class="dashboard-header">
+                    <div class="dashboard-header-content">
+                        <div class="dashboard-logo">
+                            <div class="logo-container">
+                                <div class="logo-blur"></div>
+                                <div class="logo-main small">
+                                    <svg class="logo-network" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <circle cx="12" cy="12" r="2"/><path d="M12 1v6m0 6v6"/><path d="m15.5 3.5-1.9 1.9"/><path d="m5.5 15.5 1.9-1.9"/>
+                                    </svg>
+                                    <svg class="logo-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                                    </svg>
+                                    <svg class="logo-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <polygon points="13,2 3,14 12,14 11,22 21,10 12,10 13,2"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard-title-section">
+                            <h1 class="dashboard-title">Your Personal Dashboard</h1>
+                            <p id="dashboard-welcome" class="dashboard-welcome">Welcome back!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dashboard-preferences-card" class="dashboard-preferences-card">
+                    <div id="dashboard-preferences-content" class="dashboard-preferences-content">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div id="gigs-section" class="gigs-section hidden">
+                    <div class="gigs-header">
+                        <h2 class="gigs-title">Recommended Opportunities</h2>
+                        <p class="gigs-subtitle">Fresh gigs matching your preferences from the last 6 hours</p>
+                    </div>
+
+                    <div id="gigs-list" class="gigs-list">
+                        <!-- Gigs will be populated by JavaScript -->
+                    </div>
+
+                    <div id="no-gigs-message" class="no-gigs-message hidden">
+                        <div class="no-gigs-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                            </svg>
+                        </div>
+                        <h3 class="no-gigs-title">No new matches found</h3>
+                        <p class="no-gigs-text">
+                            We haven't found any new gigs matching your preferences in the last 6 hours.
+                            Don't worry - we'll notify you via email as soon as new opportunities arrive!
+                        </p>
+                        <div class="no-gigs-actions">
+                            <button id="adjust-preferences" class="btn-outline">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                Adjust Preferences
+                            </button>
+                        </div>
+                        <div class="no-gigs-tips">
+                            <p class="tips-title">💡 Pro Tips:</p>
+                            <ul class="tips-list">
+                                <li>• Try selecting different or additional categories</li>
+                                <li>• Check back during peak posting hours (9-11 AM, 2-4 PM)</li>
+                                <li>• We analyze 1000+ new gigs daily</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../static/script.js"></script>
+</body>
+</html>

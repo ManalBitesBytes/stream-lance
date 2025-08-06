@@ -74,7 +74,7 @@ def send_email(recipient_email, subject, body_html):
 def format_gigs_for_email(gigs):
     """
     Formats a list of gig dictionaries into an HTML string suitable for an email,
-    using a loaded template.
+    using a loaded template with modern card design.
     """
     if not gigs:
         return "<p>No new gigs matching your preferences at this time.</p>"
@@ -83,14 +83,17 @@ def format_gigs_for_email(gigs):
     if template_html is None:
         return "<p>Error: Email template could not be loaded.</p>"
 
-    gigs_html_items = ""
+    gigs_html_items = []
     for gig in gigs:
         title = gig.title if hasattr(gig, 'title') else 'N/A'
         link = gig.link if hasattr(gig, 'link') else '#'
         description = gig.description if hasattr(gig, 'description') else 'No description provided.'
         category = gig.category if hasattr(gig, 'category') else 'Uncategorized'
         published_at = gig.published_at if hasattr(gig, 'published_at') else None
+        budget_amount = getattr(gig, 'budget_amount', None)
+        budget_currency = getattr(gig, 'budget_currency', None)
 
+        # Format published date
         if isinstance(published_at, datetime):
             published_at_str = published_at.strftime('%Y-%m-%d %H:%M UTC')
         elif isinstance(published_at, str):
@@ -98,15 +101,67 @@ def format_gigs_for_email(gigs):
         else:
             published_at_str = 'N/A'
 
-        safe_description = description.replace('<', '&lt;').replace('>', '&gt;')
+        # Format budget if available
+        budget_html = ""
+        if budget_amount and budget_currency:
+            budget_html = f"""
+                <div class="gig-budget">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="12" y1="2" x2="12" y2="22"/>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                    {budget_amount} {budget_currency}
+                </div>
+            """
 
-        gigs_html_items += f"""
-            <div class="gig-item">
-                <div class="gig-title"><a href="{link}" target="_blank">{title}</a></div>
-                <div class="gig-category">Category: {category} | Published: {published_at_str}</div>
-                <div class="gig-description">{safe_description[:200]}...</div>
-                <div class="gig-link"><a href="{link}" target="_blank">View Gig</a></div>
-            </div>
+        # Format category
+        category_html = f"""
+            <span class="gig-category">
+                {category}
+            </span>
         """
 
-    return template_html.format(gigs_content=gigs_html_items)
+        # Format date
+        date_html = f"""
+            <span class="gig-date">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                {published_at_str}
+            </span>
+        """
+
+        # Build the gig card
+        gig_html = f"""
+        <div class="gig-card">
+            <div class="gig-header">
+                <h3 class="gig-title">
+                    <a href="{link}" target="_blank" rel="noopener noreferrer">
+                        {title}
+                    </a>
+                </h3>
+                <div class="gig-meta">
+                    {category_html}
+                    {date_html}
+                    {budget_html}
+                </div>
+            </div>
+            <div class="gig-content">
+                <p class="gig-description">
+                    {description[:200]}{'...' if len(description) > 200 else ''}
+                </p>
+                <div class="gig-actions">
+                    <a href="{link}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                        View Opportunity
+                    </a>
+                </div>
+            </div>
+        </div>
+        """
+        gigs_html_items.append(gig_html)
+
+    # Join all gig cards and replace the placeholder
+    return template_html.replace('{{gigs_content}}', '\n'.join(gigs_html_items))

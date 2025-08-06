@@ -5,5 +5,7 @@ schedule>=1.2.1
 Flask>=2.3.0
 Flask-SQLAlchemy>=3.0.0
 Flask-Bcrypt>=1.0.1
+flask_wtf
+flask-cors
 requests>=2.31.0
 gunicorn>=21.2.0
