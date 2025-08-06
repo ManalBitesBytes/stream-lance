@@ -2,7 +2,7 @@
 
 ## Overview
 
-StreamLance Analytics is a robust, multi-service application designed to help freelancers and job seekers find relevant gigs that match their skills and interests. It features an automated ETL (Extract, Transform, Load) pipeline that scrapes gig data from online sources and a sophisticated notification system that delivers personalized job alerts directly to users' inboxes. The project is built using Python, Flask, Docker, and PostgreSQL, ensuring a scalable and maintainable architecture.
+StreamLance Analytics is a robust, multi-service application designed to help freelancers and job seekers find relevant gigs that match their skills and interests. It features an automated ETL (Extract, Transform, Load) pipeline that extracts gig data from website rss and categorizw them using keywords approach then sophisticated notification system that delivers personalized job alerts directly to users' inboxes. The project is built using Python, Flask, Docker, and PostgreSQL, ensuring a scalable and maintainable architecture.
 
 ## Key Features
 
@@ -84,8 +84,6 @@ SMTP_SERVER=smtp.gmail.com
 SMTP_PORT=587
 ```
 ### 3. Running the Application
-
-### Getting Started
 
 #### Clone the repository:
  ```bash
