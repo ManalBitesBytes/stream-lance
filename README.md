@@ -32,35 +32,35 @@ Follow these steps to get a local instance of the application up and running.
 
 ### 1. Project Structure
 
-./
-├── .env                      # Environment variables (e.g., database credentials)
-├── .gitignore                # Git ignore file
-├── docker-compose.yml        # Docker Compose configuration for all services
-├── Dockerfile.app            # Dockerfile for the Flask web application
-├── Dockerfile.orchestrator   # Dockerfile for the orchestrator background worker
-├── orchestrator.py           # Script for orchestrating background tasks
-├── venv/                     # Virtual environment (ignored by Git)
-├── app/                      # Flask application code
-│   ├── init.py           # Initialization file for the Flask app
-│   ├── frontend_routes.py    # Routes for the frontend
-│   ├── main.py               # Entry point for the Flask web application
-│   ├── models.py             # Database models
-│   ├── routes.py             # Additional API or app routes
-│   ├── static/               # Static files (e.g., CSS, JS, images)
-│   └── templates/            # HTML templates for the web interface
-├── db/                       # Database initialization scripts
-│   └── init_db.sql           # SQL script to initialize the PostgreSQL database
-├── etl/                      # ETL (Extract, Transform, Load) pipeline
-│   ├── extract/              # Directory for extract scripts
-│   ├── transform/            # Directory for transform scripts
-│   └── load/                 # Directory for load scripts
-├── notification/             # Notification-related code
-│   ├── init.py           # Initialization file for the notification module
-│   ├── email_sender.py       # Logic for sending email notifications
-│   ├── email_template.html   # HTML template for email notifications
-│   └── notifier.py           # Notification logic (e.g., scheduling emails)
-├── utils/                    # Utility modules (e.g., database utilities)
-│   └── (utility files)
+
+### Components
+
+- **.env**: Stores environment variables such as `DATABASE_URL`, `POSTGRES_USER`, and `FLASK_SECRET_KEY`.
+- **.gitignore**: Specifies files and directories to ignore in Git (e.g., `venv/`).
+- **docker-compose.yml**: Orchestrates the PostgreSQL database, Flask app, and orchestrator services.
+- **Dockerfile.app**: Defines the Docker image for the Flask app, running with Gunicorn.
+- **Dockerfile.orchestrator**: Defines the Docker image for the orchestrator, running background tasks.
+- **orchestrator.py**: The main script for running background tasks, such as triggering the ETL pipeline and notifications.
+- **app/**:
+  - `__init__.py`: Initializes the Flask application.
+  - `frontend_routes.py`: Defines routes for the web frontend.
+  - `main.py`: The entry point for the Flask app.
+  - `models.py`: Defines database models (e.g., `User`, `Gig`).
+  - `routes.py`: Additional API or app routes.
+  - `static/`: Contains static assets (e.g., CSS, JavaScript, images).
+  - `templates/`: Contains HTML templates for rendering web pages.
+- **db/**: Holds `init_db.sql` for setting up the PostgreSQL database schema.
+- **etl/**: Contains the ETL pipeline with subdirectories:
+  - `extract/`: Scripts for extracting gig data from sources.
+  - `transform/`: Scripts for transforming extracted data.
+  - `load/`: Scripts for loading transformed data into the database.
+- **notification/**:
+  - `__init__.py`: Initializes the notification module.
+  - `email_sender.py`: Handles sending email notifications.
+  - `email_template.html`: The HTML template for formatting gig emails.
+  - `notifier.py`: Manages notification scheduling or logic.
+- **utils/**: Houses utility modules shared across the application.
+
 
 ### 2. Configuration
 
@@ -85,8 +85,14 @@ SMTP_PORT=587
 
 ### 3. Running the Application
 
+### Getting Started
 
-From your terminal, navigate to the project's root directory and execute the following command:
+Clone the repository:
+ ```bash
+ git clone https://github.com/yourusername/stream-lance.git
+ cd stream-lance
 
-```docker-compose up --build
+Build and start the services:
+bashdocker-compose up --build
+ذذ
 
