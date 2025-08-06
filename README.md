@@ -82,17 +82,19 @@ SMTP_USERNAME=your_email_address@gmail.com
 SMTP_PASSWORD=your_gmail_app_password
 SMTP_SERVER=smtp.gmail.com
 SMTP_PORT=587
-
+```
 ### 3. Running the Application
 
 ### Getting Started
 
-Clone the repository:
+#### Clone the repository:
  ```bash
  git clone https://github.com/yourusername/stream-lance.git
  cd stream-lance
-
-Build and start the services:
+```
+#### Build and start the services:
+```bash
 bashdocker-compose up --build
+```
 ذذ
 
